@@ -7,7 +7,7 @@ export function BioButtons() {
     <div className="flex w-full max-w-xs flex-col gap-3">
       <Link
         href="/catalogo"
-        className="rounded-none border border-ink px-6 py-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-paper"
+        className="border border-ink-text px-6 py-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-ink-text transition-colors hover:bg-ink-text hover:text-ink-bg"
       >
         Acessar site
       </Link>
@@ -15,7 +15,7 @@ export function BioButtons() {
         href={GRUPO_VIP_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="rounded-none bg-ink px-6 py-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-paper transition-opacity hover:opacity-80"
+        className="bg-ink-text px-6 py-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-ink-bg transition-opacity hover:opacity-80"
       >
         Grupo VIP
       </a>
@@ -23,7 +23,7 @@ export function BioButtons() {
         href={buildWhatsAppLink(WHATSAPP_NUMERO, MENSAGEM_PADRAO_BIO)}
         target="_blank"
         rel="noopener noreferrer"
-        className="rounded-none border border-ink px-6 py-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-paper"
+        className="border border-ink-text px-6 py-4 text-center text-xs font-medium uppercase tracking-[0.12em] text-ink-text transition-colors hover:bg-ink-text hover:text-ink-bg"
       >
         Falar no WhatsApp
       </a>
