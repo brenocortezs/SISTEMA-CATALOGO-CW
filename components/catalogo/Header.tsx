@@ -14,6 +14,7 @@ const LINKS = [
   { href: "/catalogo/acessorios", label: "Acessórios" },
   { href: "/catalogo/sobre", label: "Sobre" },
   { href: "/catalogo/depoimentos", label: "Depoimentos" },
+  { href: "/catalogo/verificacao", label: "Verificação" },
 ];
 
 function FavoritosLink() {

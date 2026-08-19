@@ -5,9 +5,11 @@ import { FichaTecnica } from "@/components/catalogo/FichaTecnica";
 import { Breadcrumb } from "@/components/catalogo/Breadcrumb";
 import { RelogiosSimilares } from "@/components/catalogo/RelogiosSimilares";
 import { WhatsAppButton } from "@/components/shared/WhatsAppButton";
+import { SeloAutenticidade } from "@/components/catalogo/SeloAutenticidade";
 import { formatarPreco } from "@/lib/format";
 import { TEXTO_PARCELAMENTO } from "@/lib/constants";
 import { buscarRelogioPorSlug, listarRelogiosSimilares } from "@/lib/queries";
+import { buscarHistoriaMarca } from "@/lib/marcaHistoria";
 
 export async function generateMetadata({
   params,
@@ -45,6 +47,7 @@ export default async function RelogioDetalhePage({
 
   const similares = await listarRelogiosSimilares(relogio);
   const mensagem = `Olá! Tenho interesse neste relógio: ${relogio.marca} ${relogio.modelo} - Ref. ${relogio.referencia}`;
+  const historiaMarca = buscarHistoriaMarca(relogio.marca);
 
   return (
     <div className="pb-28 sm:pb-0">
@@ -79,7 +82,18 @@ export default async function RelogioDetalhePage({
               <WhatsAppButton mensagem={mensagem} />
             </div>
 
+            <SeloAutenticidade />
+
             <FichaTecnica relogio={relogio} />
+
+            {historiaMarca && (
+              <div className="border-t border-hairline pt-4">
+                <h2 className="text-[11px] uppercase tracking-[0.1em] text-muted">
+                  Sobre a {relogio.marca}
+                </h2>
+                <p className="mt-2 text-xs leading-relaxed text-ink/80">{historiaMarca}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
