@@ -5,11 +5,13 @@ export type FotoRelogio = Database["public"]["Tables"]["FotoRelogio"]["Row"];
 export type Acessorio = Database["public"]["Tables"]["Acessorio"]["Row"];
 export type FotoAcessorio = Database["public"]["Tables"]["FotoAcessorio"]["Row"];
 export type Depoimento = Database["public"]["Tables"]["Depoimento"]["Row"];
+export type Usuario = Database["public"]["Tables"]["Usuario"]["Row"];
 
 export type Condicao = Database["public"]["Enums"]["Condicao"];
 export type StatusRelogio = Database["public"]["Enums"]["StatusRelogio"];
 export type StatusAcessorio = Database["public"]["Enums"]["StatusAcessorio"];
 export type TipoAcessorio = Database["public"]["Enums"]["TipoAcessorio"];
+export type PapelUsuario = Database["public"]["Enums"]["PapelUsuario"];
 
 export type RelogioComFotos = Relogio & { fotos: FotoRelogio[] };
 export type AcessorioComFotos = Acessorio & { fotos: FotoAcessorio[] };

@@ -130,6 +130,33 @@ export type Database = {
           },
         ]
       }
+      Usuario: {
+        Row: {
+          atualizadoEm: string
+          criadoEm: string
+          id: string
+          papel: Database["public"]["Enums"]["PapelUsuario"]
+          senhaHash: string
+          usuario: string
+        }
+        Insert: {
+          atualizadoEm?: string
+          criadoEm?: string
+          id: string
+          papel?: Database["public"]["Enums"]["PapelUsuario"]
+          senhaHash: string
+          usuario: string
+        }
+        Update: {
+          atualizadoEm?: string
+          criadoEm?: string
+          id?: string
+          papel?: Database["public"]["Enums"]["PapelUsuario"]
+          senhaHash?: string
+          usuario?: string
+        }
+        Relationships: []
+      }
       Relogio: {
         Row: {
           anoEstado: string | null
@@ -202,6 +229,7 @@ export type Database = {
     }
     Enums: {
       Condicao: "NOVO" | "SEMINOVO"
+      PapelUsuario: "SUPER_ADMIN" | "ADMIN"
       StatusAcessorio: "DISPONIVEL" | "VENDIDO"
       StatusRelogio: "DISPONIVEL" | "RESERVADO" | "VENDIDO"
       TipoAcessorio: "PORTA_RELOGIO" | "PULSEIRA" | "MALETA"

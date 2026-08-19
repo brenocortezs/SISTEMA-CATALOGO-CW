@@ -5,8 +5,8 @@ acessórios, e área de admin para cadastrar/editar os itens. Fechamento de vend
 via WhatsApp — não há carrinho nem checkout.
 
 Stack: Next.js (App Router) + TypeScript, Tailwind CSS, Supabase (Postgres + `@supabase/supabase-js`),
-upload de imagens via Supabase Storage, autenticação simples (usuário/senha único em variáveis
-de ambiente).
+upload de imagens via Supabase Storage, autenticação multiusuário (usuários/senhas com hash na
+tabela `Usuario`, dois papéis: Admin Máximo e Colaborador).
 
 ## Rodando localmente
 
@@ -25,16 +25,18 @@ não há chamadas ao Supabase pelo navegador.
 ## 1. Criar o banco no Supabase
 
 1. Crie um projeto gratuito em [supabase.com](https://supabase.com).
-2. Crie as tabelas `Relogio`, `FotoRelogio`, `Acessorio`, `FotoAcessorio` e `Depoimento`
-   (com os enums `Condicao`, `StatusRelogio`, `StatusAcessorio`, `TipoAcessorio`) pelo
-   SQL Editor do Supabase — veja o formato das colunas em `lib/database.types.ts`.
-3. Habilite RLS nas 5 tabelas (recomendado, já que o app não usa a API pública/anon key):
+2. Crie as tabelas `Relogio`, `FotoRelogio`, `Acessorio`, `FotoAcessorio`, `Depoimento` e
+   `Usuario` (com os enums `Condicao`, `StatusRelogio`, `StatusAcessorio`, `TipoAcessorio`,
+   `PapelUsuario`) pelo SQL Editor do Supabase — veja o formato das colunas em
+   `lib/database.types.ts`.
+3. Habilite RLS nas 6 tabelas (recomendado, já que o app não usa a API pública/anon key):
    ```sql
    ALTER TABLE public."Relogio" ENABLE ROW LEVEL SECURITY;
    ALTER TABLE public."FotoRelogio" ENABLE ROW LEVEL SECURITY;
    ALTER TABLE public."Acessorio" ENABLE ROW LEVEL SECURITY;
    ALTER TABLE public."FotoAcessorio" ENABLE ROW LEVEL SECURITY;
    ALTER TABLE public."Depoimento" ENABLE ROW LEVEL SECURITY;
+   ALTER TABLE public."Usuario" ENABLE ROW LEVEL SECURITY;
    ```
 4. Em **Project Settings → API**, copie a **Project URL** (`SUPABASE_URL`) e a chave
    **service_role** (secret) → `SUPABASE_SERVICE_ROLE_KEY`. Cole no `.env`, seguindo o
@@ -63,16 +65,31 @@ então não é preciso nenhuma variável de ambiente extra além das do passo 1 
 3. Não é preciso rodar migrations — o schema já vive só no Supabase. Rode `npm run seed`
    localmente (com o `.env` apontando pro Supabase) se quiser popular com dados de exemplo.
 
-## 5. Trocar o usuário/senha do admin
+## 5. Usuários do admin
 
-As credenciais ficam nas variáveis `ADMIN_USERNAME` e `ADMIN_PASSWORD`. Para trocar:
+Login e senha de cada pessoa ficam na tabela `Usuario` (senha sempre com hash, nunca em
+texto puro). Existem dois papéis:
 
-- **Local**: edite o arquivo `.env`.
-- **Produção**: edite as Environment Variables do projeto na Vercel e faça um redeploy
-  (Settings → Environment Variables → editar → Deployments → Redeploy). Não precisa mexer em código.
+- **Admin Máximo** (`SUPER_ADMIN`) — você. Só pode existir um; não pode ser removido nem
+  rebaixado por ninguém (nem por outro Admin Máximo, porque só um é criado manualmente
+  por SQL — veja abaixo). É o único papel que enxerga a aba **Usuários** no admin.
+- **Colaborador** (`ADMIN`) — acesso normal ao painel (relógios, acessórios, depoimentos),
+  sem acesso à gestão de usuários. Criado e removido pelo Admin Máximo em `/admin/usuarios`.
 
-Troque também `SESSION_SECRET` por uma string aleatória longa (ex: gerada com
-`openssl rand -hex 32`) antes de ir para produção.
+Para trocar sua própria senha (ou a de qualquer usuário logado), use **Minha conta** no
+menu do admin — não precisa mexer em código nem redeploy.
+
+Para criar a sua conta de Admin Máximo pela primeira vez (depois de criar a tabela
+`Usuario`), rode no SQL Editor do Supabase — troque o hash pelo gerado com
+`node -e "console.log(require('bcryptjs').hashSync('SUA_SENHA', 12))"`:
+
+```sql
+insert into public."Usuario" (id, usuario, "senhaHash", papel)
+values (gen_random_uuid()::text, 'seu_usuario', 'HASH_GERADO_ACIMA', 'SUPER_ADMIN');
+```
+
+Troque `SESSION_SECRET` por uma string aleatória longa (ex: gerada com
+`openssl rand -hex 32`) antes de ir para produção — ela assina o cookie de sessão.
 
 ## Variáveis de ambiente
 

@@ -3,16 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import type { SessaoUsuario } from "@/lib/auth";
 
-const LINKS = [
+const LINKS_BASE = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/relogios", label: "Relógios" },
   { href: "/admin/acessorios", label: "Acessórios" },
   { href: "/admin/depoimentos", label: "Depoimentos" },
 ];
 
-export function AdminNav() {
+export function AdminNav({ sessao }: { sessao: SessaoUsuario | null }) {
   const pathname = usePathname();
+  const links =
+    sessao?.papel === "SUPER_ADMIN"
+      ? [...LINKS_BASE, { href: "/admin/usuarios", label: "Usuários" }]
+      : LINKS_BASE;
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -28,7 +33,7 @@ export function AdminNav() {
         <div className="flex items-center gap-8">
           <span className="font-serif text-lg uppercase tracking-wide">Concept Watch Admin</span>
           <nav className="hidden gap-6 text-sm sm:flex">
-            {LINKS.map((link) => (
+            {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -42,15 +47,24 @@ export function AdminNav() {
             ))}
           </nav>
         </div>
-        <button
-          onClick={handleLogout}
-          className="text-sm text-muted hover:text-ink"
-        >
-          Sair
-        </button>
+        <div className="flex items-center gap-4">
+          {sessao && (
+            <Link href="/admin/conta" className="hidden text-xs text-muted hover:text-ink sm:block">
+              {sessao.usuario}
+              {sessao.papel === "SUPER_ADMIN" && (
+                <span className="ml-1.5 border border-hairline px-1.5 py-0.5 text-[9px] uppercase tracking-[0.06em]">
+                  Admin Máximo
+                </span>
+              )}
+            </Link>
+          )}
+          <button onClick={handleLogout} className="text-sm text-muted hover:text-ink">
+            Sair
+          </button>
+        </div>
       </div>
       <nav className="flex gap-4 overflow-x-auto border-t border-hairline px-4 py-2 text-sm sm:hidden">
-        {LINKS.map((link) => (
+        {links.map((link) => (
           <Link
             key={link.href}
             href={link.href}
@@ -62,6 +76,9 @@ export function AdminNav() {
             {link.label}
           </Link>
         ))}
+        <Link href="/admin/conta" className="whitespace-nowrap text-muted">
+          Minha conta
+        </Link>
       </nav>
     </header>
   );

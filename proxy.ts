@@ -19,6 +19,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  const rotaRestritaAoAdminMaximo =
+    pathname.startsWith("/admin/usuarios") || pathname.startsWith("/api/usuarios");
+
+  if (rotaRestritaAoAdminMaximo && session.papel !== "SUPER_ADMIN") {
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json({ error: "Acesso restrito" }, { status: 403 });
+    }
+    return NextResponse.redirect(new URL("/admin", request.url));
+  }
+
   return NextResponse.next();
 }
 
@@ -29,5 +39,7 @@ export const config = {
     "/api/acessorios/:path*",
     "/api/depoimentos/:path*",
     "/api/upload/:path*",
+    "/api/usuarios/:path*",
+    "/api/auth/trocar-senha",
   ],
 };
