@@ -12,7 +12,7 @@ export default async function AdminDashboardPage() {
 
   const cards = [
     { label: "Relógios disponíveis", value: relogiosDisponiveis.count ?? 0, href: "/admin/relogios" },
-    { label: "Relógios vendidos", value: relogiosVendidos.count ?? 0, href: "/admin/relogios" },
+    { label: "Relógios vendidos", value: relogiosVendidos.count ?? 0, href: "/admin/relogios?aba=vendidos" },
     { label: "Acessórios cadastrados", value: acessorios.count ?? 0, href: "/admin/acessorios" },
   ];
 

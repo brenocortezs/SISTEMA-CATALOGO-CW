@@ -31,6 +31,7 @@ export function Footer() {
         <p className="text-[11px] text-muted">
           © {new Date().getFullYear()} Concept Watch. Todos os direitos reservados.
         </p>
+        <p className="font-serif text-sm italic text-muted">Para quem entende de relógios.</p>
 
         <Link href="/admin" className="text-[10px] text-hairline hover:text-muted">
           Área administrativa

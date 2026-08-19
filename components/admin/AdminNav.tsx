@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 const LINKS = [
@@ -13,12 +13,13 @@ const LINKS = [
 
 export function AdminNav() {
   const pathname = usePathname();
-  const router = useRouter();
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/admin/login");
-    router.refresh();
+    // Navegação completa (não router.push) para evitar que o Router Cache do Next
+    // reutilize uma resposta anterior antes do cookie de sessão ser removido.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.href = "/admin/login";
   }
 
   return (

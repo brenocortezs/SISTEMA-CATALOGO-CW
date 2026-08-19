@@ -43,6 +43,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       slug,
       tipo: data.tipo,
       nome: data.nome,
+      descricao: data.descricao || null,
       preco: data.preco,
       status: data.status,
       atualizadoEm: new Date().toISOString(),

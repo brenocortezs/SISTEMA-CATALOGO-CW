@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
       slug,
       tipo: data.tipo,
       nome: data.nome,
+      descricao: data.descricao || null,
       preco: data.preco,
       status: data.status,
       atualizadoEm: new Date().toISOString(),

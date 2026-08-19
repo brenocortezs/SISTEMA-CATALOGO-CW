@@ -1,18 +1,29 @@
 import Link from "next/link";
+import clsx from "clsx";
 import { supabase } from "@/lib/supabase";
 import { formatarPreco } from "@/lib/format";
 import { TIPO_ACESSORIO_LABEL, STATUS_ACESSORIO_LABEL } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminAcessoriosPage() {
+export default async function AdminAcessoriosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ aba?: string }>;
+}) {
+  const { aba } = await searchParams;
+  const abaAtiva = aba === "vendidos" ? "vendidos" : "ativos";
+
   const { data } = await supabase
     .from("Acessorio")
     .select("*, FotoAcessorio(*)")
     .order("criadoEm", { ascending: false })
     .order("ordem", { referencedTable: "FotoAcessorio" });
 
-  const acessorios = (data ?? []).map(({ FotoAcessorio: fotos, ...acessorio }) => ({ ...acessorio, fotos }));
+  const todos = (data ?? []).map(({ FotoAcessorio: fotos, ...acessorio }) => ({ ...acessorio, fotos }));
+  const ativos = todos.filter((a) => a.status !== "VENDIDO");
+  const vendidos = todos.filter((a) => a.status === "VENDIDO");
+  const acessorios = abaAtiva === "vendidos" ? vendidos : ativos;
 
   return (
     <div>
@@ -23,6 +34,27 @@ export default async function AdminAcessoriosPage() {
           className="rounded-full bg-black px-5 py-2 text-sm font-medium uppercase tracking-wide text-white hover:bg-neutral-800"
         >
           Novo acessório
+        </Link>
+      </div>
+
+      <div className="mt-6 flex gap-2 border-b border-neutral-200">
+        <Link
+          href="/admin/acessorios"
+          className={clsx(
+            "px-4 py-2 text-sm",
+            abaAtiva === "ativos" ? "border-b-2 border-black font-medium" : "text-neutral-500"
+          )}
+        >
+          Ativos ({ativos.length})
+        </Link>
+        <Link
+          href="/admin/acessorios?aba=vendidos"
+          className={clsx(
+            "px-4 py-2 text-sm",
+            abaAtiva === "vendidos" ? "border-b-2 border-black font-medium" : "text-neutral-500"
+          )}
+        >
+          Vendidos ({vendidos.length})
         </Link>
       </div>
 
@@ -53,7 +85,9 @@ export default async function AdminAcessoriosPage() {
         </table>
 
         {acessorios.length === 0 && (
-          <p className="p-6 text-center text-neutral-500">Nenhum acessório cadastrado ainda.</p>
+          <p className="p-6 text-center text-neutral-500">
+            {abaAtiva === "vendidos" ? "Nenhum acessório vendido ainda." : "Nenhum acessório ativo no momento."}
+          </p>
         )}
       </div>
     </div>

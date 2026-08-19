@@ -16,6 +16,7 @@ export type Database = {
         Row: {
           atualizadoEm: string
           criadoEm: string
+          descricao: string | null
           id: string
           nome: string
           preco: number
@@ -26,6 +27,7 @@ export type Database = {
         Insert: {
           atualizadoEm: string
           criadoEm?: string
+          descricao?: string | null
           id: string
           nome: string
           preco: number
@@ -36,6 +38,7 @@ export type Database = {
         Update: {
           atualizadoEm?: string
           criadoEm?: string
+          descricao?: string | null
           id?: string
           nome?: string
           preco?: number

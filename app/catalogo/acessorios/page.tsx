@@ -23,7 +23,8 @@ export default async function AcessoriosPage() {
       <div className="mx-auto max-w-6xl px-4">
         <Breadcrumb tone="dark" items={[{ label: "Catálogo", href: "/catalogo" }, { label: "Acessórios" }]} />
 
-        <h1 className="mt-4 font-serif text-2xl tracking-[0.04em] text-ink-text">Acessórios</h1>
+        <span className="mt-6 block text-[11px] uppercase tracking-[0.16em] text-ink-muted">Catálogo</span>
+        <h1 className="mt-2 font-serif text-2xl tracking-[0.04em] text-ink-text">Acessórios</h1>
         <p className="mt-2 text-xs uppercase tracking-[0.06em] text-ink-muted">
           Porta-relógios, pulseiras e maletas.
         </p>

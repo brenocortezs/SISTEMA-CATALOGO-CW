@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/shared/Logo";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
@@ -30,8 +28,10 @@ export default function AdminLoginPage() {
       return;
     }
 
-    router.push("/admin");
-    router.refresh();
+    // Navegação completa (não router.push) para evitar que o Router Cache do Next
+    // reutilize uma resposta anterior sem o cookie de sessão recém-criado.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.href = "/admin";
   }
 
   return (

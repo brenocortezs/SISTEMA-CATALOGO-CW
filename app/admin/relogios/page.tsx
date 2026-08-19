@@ -1,18 +1,29 @@
 import Link from "next/link";
+import clsx from "clsx";
 import { supabase } from "@/lib/supabase";
 import { formatarPreco } from "@/lib/format";
 import { STATUS_RELOGIO_LABEL } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminRelogiosPage() {
+export default async function AdminRelogiosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ aba?: string }>;
+}) {
+  const { aba } = await searchParams;
+  const abaAtiva = aba === "vendidos" ? "vendidos" : "ativos";
+
   const { data } = await supabase
     .from("Relogio")
     .select("*, FotoRelogio(*)")
     .order("criadoEm", { ascending: false })
     .order("ordem", { referencedTable: "FotoRelogio" });
 
-  const relogios = (data ?? []).map(({ FotoRelogio: fotos, ...relogio }) => ({ ...relogio, fotos }));
+  const todos = (data ?? []).map(({ FotoRelogio: fotos, ...relogio }) => ({ ...relogio, fotos }));
+  const ativos = todos.filter((r) => r.status !== "VENDIDO");
+  const vendidos = todos.filter((r) => r.status === "VENDIDO");
+  const relogios = abaAtiva === "vendidos" ? vendidos : ativos;
 
   return (
     <div>
@@ -23,6 +34,27 @@ export default async function AdminRelogiosPage() {
           className="rounded-full bg-black px-5 py-2 text-sm font-medium uppercase tracking-wide text-white hover:bg-neutral-800"
         >
           Novo relógio
+        </Link>
+      </div>
+
+      <div className="mt-6 flex gap-2 border-b border-neutral-200">
+        <Link
+          href="/admin/relogios"
+          className={clsx(
+            "px-4 py-2 text-sm",
+            abaAtiva === "ativos" ? "border-b-2 border-black font-medium" : "text-neutral-500"
+          )}
+        >
+          Ativos ({ativos.length})
+        </Link>
+        <Link
+          href="/admin/relogios?aba=vendidos"
+          className={clsx(
+            "px-4 py-2 text-sm",
+            abaAtiva === "vendidos" ? "border-b-2 border-black font-medium" : "text-neutral-500"
+          )}
+        >
+          Vendidos ({vendidos.length})
         </Link>
       </div>
 
@@ -55,7 +87,9 @@ export default async function AdminRelogiosPage() {
         </table>
 
         {relogios.length === 0 && (
-          <p className="p-6 text-center text-neutral-500">Nenhum relógio cadastrado ainda.</p>
+          <p className="p-6 text-center text-neutral-500">
+            {abaAtiva === "vendidos" ? "Nenhum relógio vendido ainda." : "Nenhum relógio ativo no momento."}
+          </p>
         )}
       </div>
     </div>

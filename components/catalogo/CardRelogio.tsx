@@ -10,7 +10,7 @@ export function CardRelogio({ relogio }: { relogio: RelogioComFotos }) {
 
   return (
     <Link href={`/catalogo/relogio/${relogio.slug}`} className="group flex flex-col">
-      <div className="relative aspect-square w-full bg-hairline/40">
+      <div className="relative aspect-square w-full overflow-hidden bg-hairline/40 shadow-[0_0_0_1px_var(--color-hairline)] transition-shadow duration-300 group-hover:shadow-[0_12px_24px_-8px_rgba(32,32,32,0.25)]">
         {capa ? (
           <Image
             src={capa.url}

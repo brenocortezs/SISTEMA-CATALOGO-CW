@@ -5,6 +5,7 @@ export const acessorioSchema = z.object({
   slug: z.string().min(1).optional(),
   tipo: z.enum(["PORTA_RELOGIO", "PULSEIRA", "MALETA"]),
   nome: z.string().min(1, "Nome é obrigatório"),
+  descricao: z.string().optional().nullable(),
   preco: z.number().positive("Preço deve ser maior que zero"),
   status: z.enum(["DISPONIVEL", "VENDIDO"]).default("DISPONIVEL"),
   fotos: z.array(fotoSchema).default([]),

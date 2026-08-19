@@ -13,6 +13,7 @@ export function FormAcessorio({ acessorio }: { acessorio?: AcessorioFormData }) 
 
   const [tipo, setTipo] = useState(acessorio?.tipo ?? "PORTA_RELOGIO");
   const [nome, setNome] = useState(acessorio?.nome ?? "");
+  const [descricao, setDescricao] = useState(acessorio?.descricao ?? "");
   const [preco, setPreco] = useState(acessorio?.preco?.toString() ?? "");
   const [status, setStatus] = useState(acessorio?.status ?? "DISPONIVEL");
   const [fotos, setFotos] = useState<FotoUpload[]>(
@@ -31,6 +32,7 @@ export function FormAcessorio({ acessorio }: { acessorio?: AcessorioFormData }) 
     const payload = {
       tipo,
       nome,
+      descricao: descricao || null,
       preco: Number(preco),
       status,
       fotos: fotos.map((f, i) => ({ url: f.url, ordem: i })),
@@ -95,6 +97,17 @@ export function FormAcessorio({ acessorio }: { acessorio?: AcessorioFormData }) 
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             required
+            className="mt-1 w-full rounded border border-neutral-300 px-3 py-2"
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <label className="text-sm uppercase tracking-wide text-neutral-500">Descrição</label>
+          <textarea
+            value={descricao ?? ""}
+            onChange={(e) => setDescricao(e.target.value)}
+            rows={4}
+            placeholder="Detalhes do item: material, estado de conservação, dimensões, etc."
             className="mt-1 w-full rounded border border-neutral-300 px-3 py-2"
           />
         </div>

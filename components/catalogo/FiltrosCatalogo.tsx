@@ -58,7 +58,7 @@ export function FiltrosCatalogo({ marcas }: { marcas: string[] }) {
     "shrink-0 border border-ink bg-transparent px-4 py-2 text-[10px] uppercase tracking-[0.08em] text-ink outline-none cursor-pointer";
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 border border-hairline p-4 sm:flex-row sm:items-center sm:gap-4">
       <div className="relative w-full sm:max-w-xs">
         <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
         <input
